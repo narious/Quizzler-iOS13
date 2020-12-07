@@ -11,6 +11,7 @@ import Foundation
 class QuestionPack {
     let questions : [Question];
     var questionNumber = 0;
+    var correctAnswers : Int = 0;
     
     init() {
         self.questions =
@@ -50,10 +51,11 @@ class QuestionPack {
     }
     
     func currentQuestion() -> Question {
-        return self.getNumber(n: questionNumber)
+        assert(self.questionNumber != 0, "Next needs to be called atleast once, i.e. to init")
+        return self.getNumber(n: questionNumber - 1)
     }
     
     func fractionCompleted() -> Float {
-        return Float(questionNumber) / Float(self.questions.count)
+        return Float(questionNumber + 1) / Float(self.questions.count)
     }
 }

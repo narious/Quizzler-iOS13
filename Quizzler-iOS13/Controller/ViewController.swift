@@ -15,7 +15,6 @@ class ViewController: UIViewController {
     @IBOutlet weak var opt4: UIButton!
     @IBOutlet weak var questionText: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
-    var correctAnswers : Int = 0;
     var questionsPack = QuestionPack();
     var optionButtons : [UIButton] = [];
 
@@ -35,7 +34,8 @@ class ViewController: UIViewController {
     
     
     @IBAction func answerButtonPressed(_ sender: UIButton) {
-        let oldBackgroundColor = sender.backgroundColor
+        print(questionsPack.currentQuestion().correctAnswer)
+        print(sender.currentTitle!)
         if sender.currentTitle == questionsPack.currentQuestion().correctAnswer {
             sender.backgroundColor = UIColor.green
             correctAnswers += 1
@@ -50,8 +50,8 @@ class ViewController: UIViewController {
             questionText.text = "Buzzer sound.. !"
         }
         
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
-            sender.backgroundColor = oldBackgroundColor
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+            sender.backgroundColor = UIColor.clear
         }
     }
     
