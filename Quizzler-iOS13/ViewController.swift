@@ -16,16 +16,55 @@ class ViewController: UIViewController {
     @IBOutlet weak var questionText: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
     var correctAnswers : Int = 0;
-    var questionNumber : Int = 0;
-    var questions = QuestionPack();
-    
+    var questionsPack = QuestionPack();
+    var optionButtons : [UIButton] = [];
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        optionButtons = [opt1, opt2, opt3, opt4]
+        // Sets the allignment for buttons to be on the left
+        for button in optionButtons {
+            button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
+        }
+        progressBar.progress = questionsPack.fractionCompleted()
+        if questionsPack.hasNext() {
+            updateUI(q: questionsPack.next())
+        }
         // Do any additional setup after loading the view.
     }
     
     
     @IBAction func answerButtonPressed(_ sender: UIButton) {
+        let oldBackgroundColor = sender.backgroundColor
+        if sender.currentTitle == questionsPack.currentQuestion().correctAnswer {
+            sender.backgroundColor = UIColor.green
+            correctAnswers += 1
+        } else {
+            sender.backgroundColor = UIColor.red
+            
+        }
+        progressBar.progress = questionsPack.fractionCompleted()
+        if questionsPack.hasNext() {
+            updateUI(q: questionsPack.next())
+        } else {
+            questionText.text = "Buzzer sound.. !"
+        }
+        
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            sender.backgroundColor = oldBackgroundColor
+        }
+    }
+    
+    func populateButtons(q: Question) {
+        assert (q.options.count == 4, "Question doesn't have enough options in populate button \(q.options)")
+        for index in 0...3 {
+            optionButtons[index].setTitle(q.options[index], for: .normal)
+        }
+    }
+    
+    func updateUI(q: Question) {
+        questionText.text = q.question
+        populateButtons(q: q)
     }
     
 }
