@@ -40,14 +40,14 @@ class QuestionBrain {
         return true
     }
     
-    func next() -> Question {
+    func next() {
         assert(hasNext(), "Question Pack has run out of questions!")
         questionNumber += 1
-        return self.getNumber(n: questionNumber - 1)
     }
     
     func reset() {
         questionNumber = 0
+        correctAnswers = 0
     }
     
     func currentQuestion() -> Question {
@@ -62,6 +62,7 @@ class QuestionBrain {
     func isCorrect(selectedAnswer: String) -> Bool {
         let q = currentQuestion()
         if selectedAnswer == q.correctAnswer {
+            correctAnswers += 1
             return true
         }
         return false
@@ -73,5 +74,9 @@ class QuestionBrain {
     
     func getCurrentQuestionText() -> String {
         return self.currentQuestion().question
+    }
+    
+    func getNumberCorrectAnswers() -> Int {
+        return self.correctAnswers
     }
 }

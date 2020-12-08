@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var opt3: UIButton!
     @IBOutlet weak var opt4: UIButton!
     @IBOutlet weak var questionText: UILabel!
+    @IBOutlet weak var score: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
     var quizBrain = QuestionBrain();
     var optionButtons : [UIButton] = [];
@@ -27,7 +28,7 @@ class ViewController: UIViewController {
         }
         progressBar.progress = quizBrain.fractionCompleted()
         if quizBrain.hasNext() {
-            updateUI(q: quizBrain.next())
+            updateUI()
         }
         // Do any additional setup after loading the view.
     }
@@ -43,9 +44,10 @@ class ViewController: UIViewController {
         progressBar.progress = quizBrain.fractionCompleted()
         
         if quizBrain.hasNext() {
-            updateUI(q: quizBrain.next())
+            updateUI()
         } else {
             questionText.text = "Buzzer sound.. !"
+            Timer.scheduledTimer(timeInterval: 2, target: self, selector: #selector(resetUI), userInfo: nil, repeats: false)
         }
         
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -60,8 +62,17 @@ class ViewController: UIViewController {
         }
     }
     
-    func updateUI(q: Question) {
+    @objc func resetUI() {
+        quizBrain.reset()
+        progressBar.progress = quizBrain.fractionCompleted()
+        updateUI()
+        
+    }
+    
+    func updateUI() {
+        quizBrain.next()
         questionText.text = quizBrain.getCurrentQuestionText()
+        score.text = "Score: \(quizBrain.correctAnswers)"
         populateButtons()
     }
     
