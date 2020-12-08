@@ -8,7 +8,7 @@
 
 import Foundation
 
-class QuestionPack {
+class QuestionBrain {
     let questions : [Question];
     var questionNumber = 0;
     var correctAnswers : Int = 0;
@@ -57,5 +57,21 @@ class QuestionPack {
     
     func fractionCompleted() -> Float {
         return Float(questionNumber + 1) / Float(self.questions.count)
+    }
+    
+    func isCorrect(selectedAnswer: String) -> Bool {
+        let q = currentQuestion()
+        if selectedAnswer == q.correctAnswer {
+            return true
+        }
+        return false
+    }
+    
+    func getCurrentQuestionOptions() -> [String] {
+        return self.currentQuestion().options
+    }
+    
+    func getCurrentQuestionText() -> String {
+        return self.currentQuestion().question
     }
 }

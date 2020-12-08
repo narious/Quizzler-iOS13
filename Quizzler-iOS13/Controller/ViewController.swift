@@ -15,7 +15,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var opt4: UIButton!
     @IBOutlet weak var questionText: UILabel!
     @IBOutlet weak var progressBar: UIProgressView!
-    var questionsPack = QuestionPack();
+    var quizBrain = QuestionBrain();
     var optionButtons : [UIButton] = [];
 
     override func viewDidLoad() {
@@ -25,27 +25,25 @@ class ViewController: UIViewController {
         for button in optionButtons {
             button.contentHorizontalAlignment = UIControl.ContentHorizontalAlignment.left
         }
-        progressBar.progress = questionsPack.fractionCompleted()
-        if questionsPack.hasNext() {
-            updateUI(q: questionsPack.next())
+        progressBar.progress = quizBrain.fractionCompleted()
+        if quizBrain.hasNext() {
+            updateUI(q: quizBrain.next())
         }
         // Do any additional setup after loading the view.
     }
     
     
     @IBAction func answerButtonPressed(_ sender: UIButton) {
-        print(questionsPack.currentQuestion().correctAnswer)
-        print(sender.currentTitle!)
-        if sender.currentTitle == questionsPack.currentQuestion().correctAnswer {
+        if quizBrain.isCorrect(selectedAnswer: sender.currentTitle!) {
             sender.backgroundColor = UIColor.green
-            correctAnswers += 1
         } else {
             sender.backgroundColor = UIColor.red
             
         }
-        progressBar.progress = questionsPack.fractionCompleted()
-        if questionsPack.hasNext() {
-            updateUI(q: questionsPack.next())
+        progressBar.progress = quizBrain.fractionCompleted()
+        
+        if quizBrain.hasNext() {
+            updateUI(q: quizBrain.next())
         } else {
             questionText.text = "Buzzer sound.. !"
         }
@@ -55,16 +53,16 @@ class ViewController: UIViewController {
         }
     }
     
-    func populateButtons(q: Question) {
-        assert (q.options.count == 4, "Question doesn't have enough options in populate button \(q.options)")
+    func populateButtons() {
+        assert (quizBrain.currentQuestion().options.count == 4, "Question doesn't have enough options in populate button")
         for index in 0...3 {
-            optionButtons[index].setTitle(q.options[index], for: .normal)
+            optionButtons[index].setTitle(quizBrain.getCurrentQuestionOptions()[index], for: .normal)
         }
     }
     
     func updateUI(q: Question) {
-        questionText.text = q.question
-        populateButtons(q: q)
+        questionText.text = quizBrain.getCurrentQuestionText()
+        populateButtons()
     }
     
 }
